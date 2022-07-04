@@ -29,6 +29,7 @@ PICTURE_FOLDER_PATH = "/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_
 
 PATH = os.listdir(PICTURE_FOLDER_PATH)
 
+
 SLIDER_DEFAULT = 1.0
 PROPERTY_VALUES = {}
 
