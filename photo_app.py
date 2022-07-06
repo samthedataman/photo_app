@@ -29,7 +29,6 @@ PICTURE_FOLDER_PATH = "/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_
 
 PATH = os.listdir(PICTURE_FOLDER_PATH)
 
-
 SLIDER_DEFAULT = 1.0
 PROPERTY_VALUES = {}
 
@@ -177,8 +176,10 @@ def main():
 
     cols = st.columns(3)
     path_array_splits = np.array_split(PATH, 3)
-
-    arr = [{"list": path_array_splits[idx], "col": cols[idx]} for idx in range(3)]
+    arr = []
+    for idx in range(3):
+        item = {"list": path_array_splits[idx], "col": cols[idx]}
+        arr.append(item)
 
     for item in arr:  
         for count,i in enumerate(item["list"]):

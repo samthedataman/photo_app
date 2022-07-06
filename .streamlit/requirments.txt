@@ -1,0 +1,12 @@
+streamlit
+plotly.express
+pandas
+numpy
+PIL
+pathlib
+os
+df2gspread
+oauth2client
+gspread
+datetime
+random

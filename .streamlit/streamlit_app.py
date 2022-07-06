@@ -30,9 +30,6 @@ def google_sheets(CRED_PATH,SHEET_NAME,SCOPE_LIST):
     worksheet_list = sh.worksheets()
     return sh,worksheet_list,spread
 
-sh,worksheet_list,spread= google_sheets('/Users/samsavage/Documents/PancakeSwap-Data-Pipeline-/poocoin-331423-6227f4a5365e.json',"Photo_App",scopes)
-
-
 def update_the_spreadsheet(spreadsheetname,dataframe):
     col = ['UserName','Comment','TimeCommented']
     spread.df_to_sheet(dataframe[col],sheet = spreadsheetname,index = False)
@@ -43,8 +40,33 @@ def load_the_spreadsheet(spreadsheetname):
     df = pd.DataFrame(worksheet.get_all_records())
     return df
 
+@st.cache(show_spinner=True, persist=True, suppress_st_warning=True)
+def image_meta(path):
+        image_OBJ = Image.open(path)
+        info_dict = {
+            "Filename": image_OBJ.filename,
+            "Image Size": image_OBJ.size,
+            "Image Height": image_OBJ.height,
+            "Image Width": image_OBJ.width,
+            "Image Format": image_OBJ.format,
+            "Image Mode": image_OBJ.mode,
+            "Image is Animated": getattr(image_OBJ, "is_animated", False),
+            "Frames in Image": getattr(image_OBJ, "n_frames", 1)
+        }
+        df = pd.DataFrame.from_dict(info_dict)
+        enh = ImageEnhance.Contrast(image_OBJ)
+        im_output = enh.enhance(Contrast_values)
+        enh = ImageEnhance.Brightness(im_output)
+        im_output = enh.enhance(Brightness_values)
+        enh = ImageEnhance.Sharpness(im_output)
+        im_output = enh.enhance(Sharpness_values)
+        enh = ImageEnhance.Color(im_output)
+        im_output = enh.enhance(Color_values)
+        return st.image(im_output)
 
-print("data loaded to sheet")
+
+
+sh,worksheet_list,spread = google_sheets('poocoin-331423-6227f4a5365e.json',"Photo_App",scopes)
 
 df = load_the_spreadsheet('Comment_Data')
 
@@ -91,16 +113,17 @@ color_slider_default = 1.0
 comments = []
 user_names = []
 with st.sidebar:
-
     Brightness_values = st.slider('Toggle Image Brightness', 0.0, 10.0,(bightness_slider_default))
     Contrast_values = st.slider('Toggle Image Contrast', -1.0, 5.0,(contrast_slider_default))
     Sharpness_values = st.slider('Toggle Image Sharpness', -1.0,5.0,(sharpness_slider_default))
     Color_values = st.slider('Toggle Image Color', -1.0,5.0,(color_slider_default))
     st.write("**Add your own comment:**")
     form = st.form("comment")
-    name = form.text_input("Name","Name")
-    comment = form.text_area("Comment","Write how you feel here!")
+    name = form.text_input("Name","")
+    comment = form.text_area("Comment","")
     submit = form.form_submit_button("Add comment")
+
+
 
     if submit:
         now = datetime.now()
@@ -115,29 +138,7 @@ with st.sidebar:
         update_the_spreadsheet('Comment_Data', new_df)
   
 
-@st.cache(show_spinner=True, persist=True, suppress_st_warning=True)
-def image_meta(path):
-        image_OBJ = Image.open(path)
-        info_dict = {
-            "Filename": image_OBJ.filename,
-            "Image Size": image_OBJ.size,
-            "Image Height": image_OBJ.height,
-            "Image Width": image_OBJ.width,
-            "Image Format": image_OBJ.format,
-            "Image Mode": image_OBJ.mode,
-            "Image is Animated": getattr(image_OBJ, "is_animated", False),
-            "Frames in Image": getattr(image_OBJ, "n_frames", 1)
-        }
-        df = pd.DataFrame.from_dict(info_dict)
-        enh = ImageEnhance.Contrast(image_OBJ)
-        im_output = enh.enhance(Contrast_values)
-        enh = ImageEnhance.Brightness(im_output)
-        im_output = enh.enhance(Brightness_values)
-        enh = ImageEnhance.Brightness(im_output)
-        im_output = enh.enhance(Sharpness_values)
-        enh = ImageEnhance.Brightness(im_output)
-        im_output = enh.enhance(Color_values)
-        return st.image(im_output)
+
 
 index = 0
 col1, col2, col3 = st.columns(3)
@@ -149,161 +150,21 @@ user_feedback = []
 for count,i in enumerate(list1):
     try:
         with col1:
-            image_meta(f'/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_Photos/{i}')
-            # user_ratings_1 = st.number_input("rate this photo!",min_value=1, max_value=5, step=1,key=f"{count*1.1}")
-            # if st.button("Submit",key=f"{count*1.11}"):
-            #     user_feedback.append(user_ratings_1)
-            #     print(user_feedback)
+            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
     except:
-        print("shit")
+        print("image not available")
     continue
 for count,i in enumerate(list2):
     try:
         with col2:
-            image_meta(f'/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_Photos/{i}')
-            # user_ratings_2 = st.number_input("rate this photo!",min_value=1, max_value=5, step=1,key=f"{count*1.11}")            
-            # if st.button("Submit",key=f"{count*1.11}"):
-            #     user_feedback.append(user_ratings_1)
-            #     print(user_feedback)
-            
-
+            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
     except:
-        print("shit")
+        print("image not available")
     continue
 for count,i in enumerate(list3):
     try:
         with col3:
-            image_meta(f'/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_Photos/{i}')
-            # user_ratings_3 = st.number_input("rate this photo!",min_value=1, max_value=5, step=1,key=f"{count*1.17}")
-            # if st.button("Submit",key=f"{count*1.17}"):
-            #     user_feedback.append(user_ratings_1)
-            #     print(user_feedback)
+            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
     except:
-        print("shit")
+        print("image not available")
     continue
-
-
-
-#opening gsheets
-
-
-
-
-
-
-# reset_button = st.sidebar.radio('Reset your Images',['1','-1','0','2'])
-
-
-# if reset_button == '-1':
-#     bightness_slider_default = -1.0
-#     contrast_slider_default = -1.0
-#     sharpness_slider_default = -1.0
-#     color_slider_default = -1.0
-# elif reset_button == '0':
-#     bightness_slider_default = 0.0
-#     contrast_slider_default = 0.0
-#     sharpness_slider_default = 0.0
-#     color_slider_default = 0.0
-# elif reset_button == '1':
-#     bightness_slider_default = 1.0
-#     contrast_slider_default = 1.0
-#     sharpness_slider_default = 1.0
-#     color_slider_default = 1.0
-# elif reset_button == '2':
-#     bightness_slider_default = 2.0
-#     contrast_slider_default = 2.0
-#     sharpness_slider_default = 2.0
-#     color_slider_default = 2.0
-
-
-# for i in PATH:
-#     with col1:
-#         try:
-#             index+=1
-#             image_meta(f'/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_Photos/{i}')
-#             st.text_input("comment","")
-#             print(index)
-#             # st.write("**Add your own comment:**")
-#             # form = st.form("comment")
-#             # name = form.text_input("Name")
-#             # comment = form.text_area("Comment")
-#             # submit = form.form_submit_button("Add comment")
-
-#         except:
-#             print("fuck it")
-        #  continue
-
-
-# for tag_id in exifdata:
-#     # get the tag name, instead of human unreadable tag id
-#     tag = TAGS.get(tag_id, tag_id)
-
-    # # decode bytes 
-    # if isinstance(data, bytes):
-    #     data = data.decode()
-    # print(f"{tag:25}: {data}")
-
-
-# info_dict = {
-#     "Filename": image.filename,
-#     "Image Size": image.size,
-#     "Image Height": image.height,
-#     "Image Width": image.width,
-#     "Image Format": image.format,
-#     "Image Mode": image.mode,
-#     "Image is Animated": getattr(image, "is_animated", False),
-#     "Frames in Image": getattr(image, "n_frames", 1)
-# }
-# st.image(image, caption='Enter any caption here')
-
-# df_low = pd.DataFrame.from_dict(info_dict)
-
-# print(df)
-# st.dataframe(df)
-
-# condition_types= list(df['condition_flag'].drop_duplicates())
-# clothing_types = list(df['type_flag'].drop_duplicates())
-# color_types = list(df['color_flag'].drop_duplicates())
-
-# color_choice = st.sidebar.multiselect(
-#     "Colors:", color_types, default=color_types)
-
-# clothing_choice = st.sidebar.multiselect(
-#     "Clothing:", clothing_types, default=clothing_types)
-
-
-# condition_choice = st.sidebar.multiselect(
-#     "Condition:", condition_types, default=condition_types)
-
-# cols = ["color_flag","type_flag","likes_flag","size_flag"]
-
-# st_ms = st.multiselect("Columns",df.columns.to_list(),default=cols)
-
-
-# price_values = st.slider('Price range',float(df['new_price_flag'].min()), 2., (4., 100.))
-
-# df = df[df['condition_flag'].isin(condition_choice)]
-# df = df[df['type_flag'].isin(clothing_choice)]
-# df = df[df['color_flag'].isin(color_choice)]
-
-
-# st.subheader('Sample Data')
-
-
-# st.dataframe(df.head())
-
-# # st.table(df.groupby("color_flag")['new_price_flag'].mean().reset_index())
-
-
-# f = px.histogram(df.query(f'new_price_flag.between{price_values}'), x='new_price_flag', nbins=50, title='Price distribution')
-# f.update_xaxes(title='new_price_flag')
-# f.update_yaxes(title='No. of listings')
-# st.plotly_chart(f)
-
-
-# credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/samsavage/Documents/PancakeSwap-Data-Pipeline-/poocoin-331423-6227f4a5365e.json', scopes)
-# client = Client(scope=scopes,creds=credentials)
-# spreadsheetname = "Photo_App"
-# spread = Spread(spreadsheetname,client = client)
-# sh = client.open(spreadsheetname)
-# worksheet_list = sh.worksheets()
