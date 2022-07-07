@@ -102,7 +102,7 @@ user_comments = st.write(f"""Here is what others are saying:
 link='Follow me on IG @  [link](https://www.instagram.com/samthematzahman/?hl=en/)'
 st.markdown(link,unsafe_allow_html=True)
 #opening the image
-PATH = os.listdir('/Users/samsavage/Pictures/RIOCHE/RIOCHE_Best/Best_Summer_Photos')
+PATH = os.listdir('/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/')
 
 bightness_slider_default = 1.0
 contrast_slider_default = 1.0
