@@ -7,7 +7,9 @@ from PIL.ExifTags import TAGS
 from pathlib import Path
 import os
 from PIL import ImageEnhance
-from df2gspread import df2gspread as d2g
+# import df2gspread
+# from df2gspread import df2gspread as d2g
+
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 from os import listdir
@@ -19,7 +21,10 @@ from gspread_pandas import Spread,Client
 
 scopes = ['https://www.googleapis.com/auth/spreadsheets', 
           "https://www.googleapis.com/auth/drive.file", 
-          "https://www.googleapis.com/auth/drive"]
+          "https://www.googleapis.com/auth/drive",
+          "https://www.googleapis.com/auth/photoslibrary", 
+        "https://www.googleapis.com/auth/photoslibrary.readonly",
+        "https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata"]
 
 def google_sheets(CRED_PATH,SHEET_NAME,SCOPE_LIST):
     credentials = ServiceAccountCredentials.from_json_keyfile_name(F'{CRED_PATH}', SCOPE_LIST)
@@ -66,7 +71,7 @@ def image_meta(path):
 
 
 
-sh,worksheet_list,spread = google_sheets('poocoin-331423-6227f4a5365e.json',"Photo_App",scopes)
+sh,worksheet_list,spread = google_sheets('/Users/samsavage/Desktop/Streamlit App/.streamlit/poocoin-331423-6227f4a5365e.json',"Photo_App",scopes)
 
 df = load_the_spreadsheet('Comment_Data')
 
@@ -102,7 +107,7 @@ user_comments = st.write(f"""Here is what others are saying:
 link='Follow me on IG @  [link](https://www.instagram.com/samthematzahman/?hl=en/)'
 st.markdown(link,unsafe_allow_html=True)
 #opening the image
-PATH = os.listdir('/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/')
+PATH = os.listdir('/Users/samsavage/Desktop/2022_Thanksgiving_SHORT')
 
 bightness_slider_default = 1.0
 contrast_slider_default = 1.0
@@ -142,7 +147,7 @@ with st.sidebar:
 
 index = 0
 col1, col2, col3 = st.columns(3)
-list1,list2,list3 = np.array_split(PATH, 3)
+list1,list2,list3 = np.array_split(PATH[0:30], 3)
 
 
 user_feedback = []
@@ -150,21 +155,21 @@ user_feedback = []
 for count,i in enumerate(list1):
     try:
         with col1:
-            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
+            image_meta(f'/Users/samsavage/Desktop/2022_Thanksgiving_SHORT/{i}')
     except:
         print("image not available")
     continue
 for count,i in enumerate(list2):
     try:
         with col2:
-            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
+            image_meta(f'/Users/samsavage/Desktop/2022_Thanksgiving_SHORT/{i}')
     except:
         print("image not available")
     continue
 for count,i in enumerate(list3):
     try:
         with col3:
-            image_meta(f'/Users/samsavage/Desktop/Streamlit App/.streamlit/Best_Summer_Photos/{i}')
+            image_meta(f'/Users/samsavage/Desktop/2022_Thanksgiving_SHORT/{i}')
     except:
         print("image not available")
     continue
